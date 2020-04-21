@@ -10,7 +10,7 @@ func main() {
 
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		cycles, err := strconv.Atoi(r.URL.Query().Get("cycles"))
-		if err != nil && cycles < 1 {
+		if err != nil || cycles < 1 {
 			cycles = 5
 		}
 		lissajous(w, float64(cycles))
