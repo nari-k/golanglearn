@@ -9,15 +9,28 @@ import (
 
 func main() {
 
-	fmt.Printf("http://localhost:8000/?w=2000&h=2000&t=red&b=green&f=black&c=300")
+	fmt.Printf("http://localhost:8000/?w=1000&h=800&co=red")
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "image/svg+xml")
 
-		cycles, err := strconv.Atoi(r.URL.Query().Get("cycles"))
-		if err != nil || cycles < 1 {
-			cycles = 5
+		p := new(params)
+		wid, err := strconv.Atoi(r.URL.Query().Get("w"))
+		if err != nil || wid < 1 {
+			wid = width
 		}
-		surface(w)
+		p.width = float64(wid)
+		hi, err := strconv.Atoi(r.URL.Query().Get("h"))
+		if err != nil || wid < 1 {
+			hi = height
+		}
+		p.height = float64(hi)
+		co := r.URL.Query().Get("co")
+		if len(co) == 0 {
+			co = "#ffffff"
+		}
+		p.color = co
+
+		surface(w, p)
 	}
 	http.HandleFunc("/", handler)
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
